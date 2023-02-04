@@ -13,3 +13,5 @@ A replica set in MongoDB is a group of mongod processes that maintain the same d
     └── scripts
     └── make_replica_set.sh
 ```
+
+![Example](https://github.com/wassef911/mongo-replication/blob/master/example.png?raw=true)
