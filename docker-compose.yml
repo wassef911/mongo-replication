@@ -1,9 +1,20 @@
 version: "3.7"
-                           
+#  ____  ____   ___   _______     _____  ________    ___   ____  _____  
+# |_   ||   _|.'   `.|_   __ \   |_   _||  __   _| .'   `.|_   \|_   _| 
+#   | |__| | /  .-.  \ | |__) |    | |  |_/  / /  /  .-.  \ |   \ | |   
+#   |  __  | | |   | | |  __ /     | |     .'.' _ | |   | | | |\ \| |   
+#  _| |  | |_\  `-'  /_| |  \ \_  _| |_  _/ /__/ |\  `-'  /_| |_\   |_  
+# |____||____|`.___.'|____| |___||_____||________| `.___.'|_____|\____| 
+#   _____     ____     _____   ______                                   
+#  / ___ `. .'    '.  / ___ `./ ____ `.                                 
+# |_/___) ||  .--.  ||_/___) |`'  __) |                                 
+#  .'____.'| |    | | .'____.'_  |__ '.                                 
+# / /_____ |  `--'  |/ /_____| \____) |                                 
+# |_______| '.____.' |_______|\______.'                                 
+
 services:
   mongo-setup:
     image: mongo
-    restart: on-failure
     entrypoint: ["bash", "/scripts/make_all_in_one_go.sh"]   
     volumes:
       - ./scripts:/scripts   
@@ -13,8 +24,42 @@ services:
       - mongo1_rs1
       - mongo2_rs1
       - mongo3_rs1
+      # - mongo1_rs2
+      # - mongo2_rs2
+      # - mongo3_rs2
+      # - mongo1_rs3
+      # - mongo2_rs3
+      # - mongo3_rs3
     networks:
       - horizon-net
 
+  database:
+    image: mongo
+    restart: always 
+    command: mongos --port ${DATABASE_PORT} --configdb rs-config-server/configsvr:${CONFIG_SERVER_PORT} --bind_ip_all
+    ports:
+      - ${DATABASE_PORT}:${DATABASE_PORT}
+    volumes:
+      - ./scripts:/scripts
+    env_file:
+      - .env
+    networks:
+      - horizon-net
+  configsvr:
+    image: mongo
+    restart: always
+    command: mongod --port ${CONFIG_SERVER_PORT} --configsvr --replSet rs-config-server
+    volumes:
+      - ./scripts:/scripts 
+    ports:
+      - ${CONFIG_SERVER_PORT}:${CONFIG_SERVER_PORT}
+    networks:
+      - horizon-net
+    env_file:
+      - .env
+    depends_on:
+      - mongo1_rs1
+      # - mongo1_rs2 TODO
+      # - mongo1_rs3
 networks:
   horizon-net:

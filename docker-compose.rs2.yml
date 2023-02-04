@@ -11,32 +11,26 @@ services:
     networks:
       - horizon-net
 
-  mongo1_rs1:
+  mongo1_rs2:
     <<: *mongo
     expose:
       - ${DB1_RS1_PORT}
-    ports:
-      - ${DB1_RS1_PORT}:${DB1_RS1_PORT}
     volumes:
-      - ./mongo-volumes/mongo1/data/db:/data/db
-    entrypoint: ["/usr/bin/mongod", "--bind_ip_all", "--replSet", "${REPLICA_SET_NAME_1}", "--journal", "--dbpath", "/data/db", "--port", "${DB1_RS1_PORT}"]
+      - ./mongo-volumes/mongo1_2/data/db:/data/db
+    entrypoint: ["/usr/bin/mongod", "--bind_ip_all", "--replSet", "${REPLICA_SET_NAME_2}", "--journal", "--dbpath", "/data/db", "--port", "${DB1_RS2_PORT}"]
 
-  mongo2_rs1:
+  mongo2_rs2:
     <<: *mongo
     expose:  
       - ${DB2_RS1_PORT}
-    ports:
-      - ${DB2_RS1_PORT}:${DB2_RS1_PORT}
     volumes:
-      - ./mongo-volumes/mongo2/data/db:/data/db     # Create a volume to persist data
-    entrypoint: ["/usr/bin/mongod", "--bind_ip_all", "--replSet", "${REPLICA_SET_NAME_1}", "--journal", "--dbpath", "/data/db", "--port", "${DB2_RS1_PORT}"]
+      - ./mongo-volumes/mongo2_2/data/db:/data/db
+    entrypoint: ["/usr/bin/mongod", "--bind_ip_all", "--replSet", "${REPLICA_SET_NAME_2}", "--journal", "--dbpath", "/data/db", "--port", "${DB2_RS2_PORT}"]
 
-  mongo3_rs1:
+  mongo3_rs2:
     <<: *mongo
     expose:
       - ${DB3_RS1_PORT}
-    ports:
-      - ${DB3_RS1_PORT}:${DB3_RS1_PORT}
     volumes:
-      - ./mongo-volumes/mongo3/data/db:/data/db
-    entrypoint: ["/usr/bin/mongod", "--bind_ip_all", "--replSet", "${REPLICA_SET_NAME_1}", "--journal", "--dbpath", "/data/db", "--port", "${DB3_RS1_PORT}"]
+      - ./mongo-volumes/mongo3_2/data/db:/data/db
+    entrypoint: ["/usr/bin/mongod", "--bind_ip_all", "--replSet", "${REPLICA_SET_NAME_2}", "--journal", "--dbpath", "/data/db", "--port", "${DB3_RS2_PORT}"]
