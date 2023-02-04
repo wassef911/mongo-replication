@@ -3,7 +3,7 @@
 echo "********** make_config_server.sh **********"
 
 echo make_config_server.sh time now: `date +"%T" `
-mongosh --host ${PRIMARY}:${PRIMARY_PORT} <<EOF
+mongosh --host configsvr:${CONFIG_SERVER_PORT} <<EOF
 
 rs.initiate(
    {

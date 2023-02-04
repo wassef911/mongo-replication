@@ -3,7 +3,7 @@
 echo "********** make_router.sh **********"
 
 echo make_replica_set.sh time now: `date +"%T" `
-mongosh --host ${PRIMARY}:${PRIMARY_PORT} <<EOF
+mongosh --host configsvr:${CONFIG_SERVER_PORT} <<EOF
 
 
 sh.addShard("rs-shard-01/mongo1_rs1:${DB1_RS1_PORT}")

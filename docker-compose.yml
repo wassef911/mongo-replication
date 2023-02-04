@@ -41,6 +41,8 @@ services:
       - ${DATABASE_PORT}:${DATABASE_PORT}
     volumes:
       - ./scripts:/scripts
+    expose:  
+      - ${DATABASE_PORT}
     env_file:
       - .env
     networks:
@@ -51,8 +53,8 @@ services:
     command: mongod --port ${CONFIG_SERVER_PORT} --configsvr --replSet rs-config-server
     volumes:
       - ./scripts:/scripts 
-    ports:
-      - ${CONFIG_SERVER_PORT}:${CONFIG_SERVER_PORT}
+    expose:
+      - ${CONFIG_SERVER_PORT}
     networks:
       - horizon-net
     env_file:
