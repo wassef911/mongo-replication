@@ -1,42 +1,20 @@
 version: "3.7"
-
-# Our containers
+                           
 services:
-  base:
-    &mongo
+  mongo-setup:
     image: mongo
-    restart: unless-stopped
+    restart: on-failure
+    entrypoint: ["bash", "/scripts/make_all_in_one_go.sh"]   
+    volumes:
+      - ./scripts:/scripts   
     env_file:
       - .env
+    depends_on:
+      - mongo1_rs1
+      - mongo2_rs1
+      - mongo3_rs1
     networks:
       - horizon-net
 
-  mongo1:
-    <<: *mongo
-    expose:
-      - ${MONGODB1_PORT}
-    ports:
-      - ${MONGODB1_PORT}:${MONGODB1_PORT}
-    volumes:
-      - ./mongo-volumes/mongo1/data/db:/data/db
-    entrypoint: ["/usr/bin/mongod", "--bind_ip_all", "--replSet", "rs0", "--journal", "--dbpath", "/data/db", "--port", "${MONGODB1_PORT}"]
-
-  mongo2:
-    <<: *mongo
-    expose:  
-      - ${MONGODB2_PORT}
-    ports:
-      - ${MONGODB2_PORT}:${MONGODB2_PORT}
-    volumes:
-      - ./mongo-volumes/mongo2/data/db:/data/db     # Create a volume to persist data
-    entrypoint: ["/usr/bin/mongod", "--bind_ip_all", "--replSet", "rs0", "--journal", "--dbpath", "/data/db", "--port", "${MONGODB2_PORT}"]
-
-  mongo3:
-    <<: *mongo
-    expose:
-      - ${MONGODB3_PORT}
-    ports:
-      - ${MONGODB3_PORT}:${MONGODB3_PORT}
-    volumes:
-      - ./mongo-volumes/mongo3/data/db:/data/db
-    entrypoint: ["/usr/bin/mongod", "--bind_ip_all", "--replSet", "rs0", "--journal", "--dbpath", "/data/db", "--port", "${MONGODB3_PORT}"]
+networks:
+  horizon-net:
