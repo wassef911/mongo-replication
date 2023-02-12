@@ -13,54 +13,63 @@ version: "3.7"
 # |_______| '.____.' |_______|\______.'                                 
 
 services:
-  mongo-setup:
-    image: mongo
-    entrypoint: ["bash", "/scripts/make_all_in_one_go.sh"]   
-    volumes:
-      - ./scripts:/scripts   
-    env_file:
-      - .env
-    depends_on:
-      - mongo1_rs1
-      - mongo2_rs1
-      - mongo3_rs1
-      # - mongo1_rs2
-      # - mongo2_rs2
-      # - mongo3_rs2
-      # - mongo1_rs3
-      # - mongo2_rs3
-      # - mongo3_rs3
-    networks:
-      - horizon-net
-
-  database:
-    image: mongo
-    restart: always 
-    command: mongos --port ${DATABASE_PORT} --configdb rs-config-server/configsvr:${CONFIG_SERVER_PORT} --bind_ip_all
-    ports:
-      - ${DATABASE_PORT}:${DATABASE_PORT}
-    volumes:
-      - ./scripts:/scripts
-    expose:  
-      - ${DATABASE_PORT}
-    env_file:
-      - .env
-    networks:
-      - horizon-net
-  configsvr:
-    image: mongo
+  cache:
+    image: redis:6.2-alpine
     restart: always
-    command: mongod --port ${CONFIG_SERVER_PORT} --configsvr --replSet rs-config-server
-    volumes:
-      - ./scripts:/scripts 
-    expose:
-      - ${CONFIG_SERVER_PORT}
-    networks:
-      - horizon-net
+    ports:
+      - '${CACHE_PORT}:${CACHE_PORT}'
+    command: redis-server --loglevel warning --requirepass ${CACHE_PASSWORD}
+    volumes: 
+      - ./cache:/data
     env_file:
       - .env
-    depends_on:
-      - mongo1_rs1
+    networks:
+      - horizon-net
+  # mongo-setup:
+  #   image: mongo
+  #   entrypoint: ["bash", "/scripts/make_all_in_one_go.sh"]   
+  #   volumes:
+  #     - ./scripts:/scripts   
+  #   env_file:
+  #     - .env
+  #   depends_on:
+  #     - mongo1_rs1
+  #     - mongo2_rs1
+  #     - mongo3_rs1
+  #     # - mongo1_rs2
+  #     # - mongo2_rs2
+  #     # - mongo3_rs2
+  #     # - mongo1_rs3
+  #     # - mongo2_rs3
+  #     # - mongo3_rs3
+  #   networks:
+  #     - horizon-net
+
+  # database:
+  #   image: mongo
+  #   restart: always 
+  #   command: mongos --port ${DATABASE_PORT} --configdb rs-config-server/configsvr:${CONFIG_SERVER_PORT} --bind_ip_all
+  #   ports:
+  #     - ${DATABASE_PORT}:${DATABASE_PORT}
+  #   expose:  
+  #     - ${DATABASE_PORT}
+  #   env_file:
+  #     - .env
+  #   networks:
+  #     - horizon-net
+  # configsvr:
+  #   image: mongo
+  #   restart: always
+  #   command: mongod --port ${CONFIG_SERVER_PORT} --configsvr --replSet rs-config-server
+  #   expose:
+  #     - ${CONFIG_SERVER_PORT}
+  #   networks:
+  #     - horizon-net
+  #   env_file:
+  #     - .env
+  #   depends_on:
+  #     - mongo1_rs1
+      ##############################
       # - mongo1_rs2 TODO
       # - mongo1_rs3
 networks:

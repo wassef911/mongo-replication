@@ -5,3 +5,4 @@ client = MongoClient("mongodb://localhost:27117/")
 db = client["database_name"]
 
 print(f"Connected to MongoDB successfully: {db}")
+## TODO CONNECT TO REDIS 

@@ -261,3 +261,5 @@ package-lock.json
 /mongo-valumes/**
 
 *.env
+
+cache/**
