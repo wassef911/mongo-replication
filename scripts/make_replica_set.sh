@@ -25,6 +25,7 @@ echo make_replica_set.sh time now: `date +"%T" `
 mongosh --host ${PRIMARY}:${PRIMARY_PORT} <<EOF
 var cfg = {
   "_id": "${REPLICA_SET_NAME}",
+  "protocolVersion": 1,
   "members": [
     {
       "_id": 0,
