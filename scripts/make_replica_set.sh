@@ -1,6 +1,7 @@
 #!/bin/bash
 
 echo "********** make_replica_set.sh **********"
+
 if [ "$#" -lt 7 ]; then
   echo "Error: 7 parameters are required, $# were passed."
   exit 1
