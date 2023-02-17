@@ -14,7 +14,7 @@ version: "3.7"
 
 services:
   cache:
-    image: redis:6.2-alpine
+    image: redis:7-alpine
     restart: always
     ports:
       - '${CACHE_PORT}:${CACHE_PORT}'
