@@ -45,6 +45,8 @@ services:
     command: mongos --port ${DATABASE_PORT} --configdb configsvr/configsvr:${CONFIG_SERVER_PORT} --bind_ip_all
     expose:  
       - ${DATABASE_PORT}
+    ports:  
+      - ${DATABASE_PORT}:${DATABASE_PORT}
     env_file:
       - .env
     networks:
